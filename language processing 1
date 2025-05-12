@@ -1,0 +1,33 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+import nltk
+import string
+
+# Optional: Download NLTK stopwords
+nltk.download('stopwords')
+from nltk.corpus import stopwords
+
+# Load the dataset
+# You can replace this with your own CSV with "text" and "label" columns
+data = pd.read_csv("fake_news_dataset.csv")
+
+# Preprocess text
+def clean_text(text):
+    text = text.lower()
+    text = "".join([char for char in text if char not in string.punctuation])
+    words = text.split()
+    words = [word for word in words if word not in stopwords.words('english')]
+    return " ".join(words)
+
+data['text'] = data['text'].apply(clean_text)
+
+# Split dataset
+X_train, X_test, y_train, y_test = train_test_split(
+    data['text'], data['label'], test_size=0.2, random_state=42
+)
+
+# TF-IDF Vectorization
+vectorizer =
