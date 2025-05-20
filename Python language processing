@@ -1,0 +1,33 @@
+import pandas as pd
+import numpy as np
+import string
+import re
+
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.linear_model import PassiveAggressiveClassifier
+from sklearn.metrics import accuracy_score, confusion_matrix
+
+import nltk
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
+
+# Download NLTK resources
+nltk.download('stopwords')
+nltk.download('wordnet')
+
+# 1. Load Dataset
+# You can use a common fake news dataset like 'news.csv'
+df = pd.read_csv('https://raw.githubusercontent.com/sameemulhaq/fake-news-detection/master/data/fake_or_real_news.csv')
+df = df[['text', 'label']]  # 'label' should be 'FAKE' or 'REAL'
+
+# 2. Preprocessing function
+def preprocess(text):
+    # Lowercase
+    text = text.lower()
+    # Remove punctuation and numbers
+    text = re.sub(r'\d+', '', text.translate(str.maketrans('', '', string.punctuation)))
+    # Tokenize and remove stopwords
+    stop_words = set(stopwords.words('english'))
+    words = text.split()
+    words = [w for w in words if w not in stop_words]
